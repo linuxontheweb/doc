@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevDocs</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        select, input, button { margin: 5px; padding: 5px; }
+        #displayArea { border: 1px solid #ccc; padding: 10px; min-height: 200px; }
+        .key-item { padding: 5px; cursor: pointer; }
+        .key-item.selected { border: 2px solid blue; }
+    </style>
+</head>
+<body>
+    <select id="loadApiSelect"></select>
+    <button id="loadApiButton">Load API</button>
+    <select id="useApiSelect"></select>
+    <button id="useApiButton">Use API</button>
+    <input id="searchBar" type="text" placeholder="Search..." disabled>
+    <div id="displayArea"></div>
+    <script src="app.js"></script>
+</body>
+</html>

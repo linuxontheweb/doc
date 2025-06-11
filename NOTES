@@ -1,0 +1,112 @@
+
+Let's build a devdocs.io-like application that has the following files:
+1) index.html
+2) worker.js
+3) app.js
+
+The following structures will be contained in app.js: 
+1) An array of "API names": 
+const apiNames = [
+	"HTML",
+	"CSS",
+	"Javascript",
+	"DOM"
+]
+2) An "API name" to "API number" (apiNum) map as such: 
+const apiNameToNum = {
+	HTML: 1,
+	CSS: 2,
+	Javascript: 3,
+	DOM: 4
+}
+
+At the top of the index.html file should be
+1) A "Load API" drop-down menu, the options of which are loaded from apiNames
+2) A "Load API" button
+3) A "Use API" drop-down menu, the options of which are loaded from apiNames
+4) A "Use API" button
+5) A text search bar
+6) An element used as the main display area (either for the current API
+listing or the contents of a key lookup)
+
+Clicking the "Load API" button will take the currently selected API from the
+dropdown menu, and send a message to the worker thread of the form: `{load:
+<apiNum>}` (a warning should immediately be logged to the console if the main
+thread detects that the listing is already loaded). Upon receipt of the message
+from the main thread, in case the file's json is already loaded into the worker
+thread's memory, immediately return with the message: `{success: <apiNum>,
+message: "Already loaded"}`.  The worker will then attempt to load the relevant
+`.json` file from the OPFS path: "/blobs/<apiNum>" (use just the plain number, e.g.
+"/blobs/1" with no extension!). If the file does not exist, return an appropriate
+error message to the main thread, and then abort. Otherwise, attempt a
+JSON.parse (in a try/catch block) on the file's string contents, and return an error
+message in case it fails, and then abort.  The parsed object should be kept in
+a data structure such that `apiNum` is used as the lookup key. Perform
+Object.keys on the parsed object and return a message to the main thread in the
+form: `{success: <apiNum>, keys: <object_keys>}`.  The main thread should keep
+a handle to the keys of the returned success object, in a way similar to how
+the worker thread keeps handles to the entire API JSON object.
+
+Upon clicking the "Use API" button, the relevant keys should be listed on the
+interface, and a `currentApi` variable should be set. If the given API is not
+loaded into the app's memory upon clicking "Use API", a relevant warning
+message should be logged via console.warn.
+
+If there is no currentApi (i.e. "Use API" has not be successfully clicked), the
+search bar should be disabled in the interface.
+
+Typing into the search bar should, for every keypress event, send "search
+requests" into the worker thread of the form: `{search: <currentApi>, value:
+<searchString>}`, such that searchString contains a minimum threshold of
+characters (e.g. 4) before it is sent to the worker thread.  As long as there
+is at least one character in the search box, pressing the Enter key will
+immediately send a search request, circumventing the minumum character
+threshold check (the worker thread must ensure that at least one character
+exists in the search string, otherwise returning an error).  The results from
+the current search will show a (possibly null) listing of the current keys that
+match `searchString`, and each newly returned listing should fully replace
+those from the previous search.  In the case that the current listing is null,
+any potential new `searchString` that is created by simply adding characters to
+the end of the one that first resulted in a null listing should not be sent to
+the worker thread, and the value of the `searchString` variable should not be
+updated.  The default way of searching (i.e. listings returned from typing into
+the seach box or pressing Enter) is via "fuzzy matching" such that there may be
+any number of intervening characters between every explicitly given character,
+i.e.  the regex for `searchString`, "abcxyz", is `re = new
+RegExp(/a.*b.*c.*x.*y.*z/i)`.  Pressing "Alt + Enter" should enable "strict
+internal matching", so that the regex of the form `/abcxyz/i` is used.
+Pressing "Ctrl + Alt + Enter" should enable "strict start matching", so that
+the regex of the form `/^abcxyz/i` is used.  RegExp.test should be used to test
+each candidate key of the requested API object.
+
+In the main thread, up/down arrow keys can then be used to move through the
+currently displayed listing of keys for the given API. A suitable method should
+be chosen so that the current key selection is clearly indicated in the
+interface (i.e. border highlighting).  When the Enter key is pressed, a message
+object will be sent to the worker thread of the form: "{get: true, api:
+<currentApi>, key: <key>}", which will return the appropriate value from the
+relevant API JSON object loaded into the worker thread's memory (the worker
+thread should have no notion of a "current API": it should always be prepared
+to return any given value from any given API).  If there is no value to be
+found, an error of the form: `{api: <apiNum>, <key>: key, error: "Not found"}`
+should be sent to the main thread. Otherwise, the success message will be of
+the form: `{api: <apiNum>, <key>: key, value: <value>}`. The success message
+should cause the main thread to replace the key listing with the returned
+(html) contents in the main display area (via its innerHTML property).  The
+search bar should then be disabled.
+
+When the "value contents" are showing, pressing the Escape key should return
+the key listing (of currentApi) back to the main display area, so that the
+arrow keys may again be used to scroll through it. The search bar should then
+be re-enabled, and its text contents should be selected (i.e. an "auto" Ctrl +
+a) so that typing into the box will overwrite the old `searchString` with a new
+one.
+
+The logic of the app.js file should be contained mostly inside of a class named
+`DocBrowser`. However, the logic of the keyboard event listeners should be kept
+outside of this class, so that the relevant public methods of the DocBrowser
+instance are called within the key handler.
+
+Upon receiving any error message, the message should be printed to the console
+via console.error.
+
