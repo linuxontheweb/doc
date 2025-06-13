@@ -1,3 +1,24 @@
+To enable SharedArrayBuffer, you need to add these headers to the 
+text/html files that are meant for the application logic.
+
+If serving via "python -m http.server", look for the file named (something like):
+/usr/local/lib/python3.13/http/server.py. 
+
+Then modify SimpleHTTPRequestHandler.send_head as such:
+
+            self.send_header("Content-type", ctype)								# Old
+            self.send_header("Content-Length", str(fs[6]))						# Old
+            self.send_header("Last-Modified",									# Old
+                self.date_time_string(fs.st_mtime))								# Old
+
+            if ctype == "text/html":											# New
+                print("*** Setting cross-origin headers on: " + path + " ***")	# New
+                self.send_header("Cross-Origin-Opener-Policy","same-origin")	# New
+                self.send_header("Cross-Origin-Embedder-Policy","require-corp") # New
+
+            self.end_headers()													# Old
+            return f															# Old
+
 Shared link to "lotw" folder on Google Drive:
 https://drive.google.com/drive/folders/1uhfaUmyHtsFCzDxMfI_VQrN8okLtJ_Na?usp=drive_link
 
