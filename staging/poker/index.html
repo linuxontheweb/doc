@@ -1,21 +1,30 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enhanced Kuhn Poker</title>
-  <style>
-    #game-container {
-      width: 100%;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poker Table</title>
+<link href="poker.css" rel="stylesheet">
 </head>
 <body>
-  <div id="game-container"></div>
-  <script type="module" src="poker.js"></script>
+    <div class="pot">Pot: $0</div>
+	<div class="controls" style="display: none;">
+		<div class="status"></div>
+		<div>
+			<button onclick="playerAction('fold')">Fold</button>
+			<button onclick="playerAction('call')">Call</button>
+			<button onclick="playerAction('raise')">Raise</button>
+			<button onclick="playerAction('all-in')">All-In</button>
+		</div>
+	</div>
+    <div id="poker-table">
+        <div class="community-cards"></div>
+    </div>
+    <div id="bet-ring">
+    </div>
+    <div class="setup">
+        <label>Players: <select id="num-players"></select></label>
+        <div id="player-types"></div>
+    </div>
+    <script src="poker.js"> </script>
 </body>
 </html>

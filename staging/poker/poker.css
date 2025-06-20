@@ -1,0 +1,133 @@
+body { 
+	margin: 0; 
+	padding: 0; 
+	background: #1a3c34; 
+	font-family: Arial, sans-serif; 
+	color: #fff; 
+	display: flex; 
+	justify-content: center; 
+	align-items: center; 
+	height: 100vh; 
+	font-size: 18px; 
+}
+#poker-table { 
+	position: absolute; 
+	width: 800px; 
+	height: 400px; 
+	background: #2e7d32; 
+	border-radius: 50%; 
+	border: 10px solid #3e2723; 
+	display: flex; 
+	justify-content: center; 
+	align-items: center; 
+}
+#bet-ring { 
+	position: absolute; 
+	width: 500px; 
+	height: 250px; 
+//	border-radius: 50%; 
+//	border: 1px solid #000; 
+	display: flex; 
+}
+.bet { 
+	color: #fff;
+	position: absolute;
+	width: 30px; 
+	height: 30px; 
+//	border: 1px solid #000; 
+//	border-radius: 3px; 
+	text-align: center; 
+	line-height: 30px; 
+	margin: 0 2px; 
+	font-size: 18px;
+	font-weight: bold;
+}
+.dealer-button {
+	position: absolute; 
+	display: none;
+	width: 15px; 
+	height: 15px; 
+	border-radius: 50%; 
+	border: 2px solid #ccc; 
+	background-color: #000;
+}
+.player { 
+	position: absolute; 
+	width: 90px; 
+	height: 90px; 
+	background: #333; 
+	border: 2px solid #fff; 
+	border-radius: 5px; 
+	display: flex; flex-direction: column; 
+	justify-content: center; 
+	align-items: center; 
+}
+.player.active { border-color: #ffd700; }
+.cards { margin-top: 5px; }
+.card { 
+	display: inline-block; 
+	width: 35px; 
+	height: 30px; 
+	background: #fff; 
+	border: 1px solid #000; 
+	border-radius: 3px; 
+	text-align: center; 
+	line-height: 30px; 
+	margin: 0 2px; 
+	font-size: 24px;
+	font-weight: bold;
+}
+.folded {
+	color: #000;
+	background: #999; 
+}
+.card.red { color: #cc0000; }
+.card.black { color: #000000; }
+.community-cards { 
+	position: absolute; 
+	top: 50%; left: 50%; 
+	transform: translate(-50%, -50%); 
+	display: flex; gap: 5px; 
+}
+.controls { 
+	position: absolute; 
+	top: 5px; 
+	left: 5px; 
+	background: rgba(0, 0, 0, 0.7); 
+	padding: 7px; 
+	border-radius: 5px; 
+	display: flex; 
+	flex-direction: column; 
+	align-items: center; 
+	z-index: 10; 
+}
+.setup { 
+	position: absolute; 
+	top: 5px; 
+	left: 5px; 
+	background: #424242; 
+	padding: 10px; 
+	border-radius: 5px; 
+}
+.controls button { 
+	padding: 10px 20px; 
+	background: #202050; 
+	color: #fff; 
+	border: none; 
+	border-radius: 5px; 
+	cursor: pointer; 
+	font-size: 18px; 
+}
+.controls button:hover { background: #0277bd; }
+.controls button:disabled { background: #616161; cursor: not-allowed; }
+.pot { 
+	position: absolute; 
+	top: 5px;
+	right: 5px;
+	font-size: 24px;
+	font-weight: bold;
+	color: #eee;
+}
+.setup label { margin-right: 10px; }
+.setup select, .setup button { padding: 5px; margin: 5px; }
+
